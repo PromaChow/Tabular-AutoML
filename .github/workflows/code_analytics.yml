@@ -1,8 +1,7 @@
 name: Code Analytics
 on:
   push:
-    branches:
-      - main
+    branches: "*"
 
 jobs:
   analyze:
