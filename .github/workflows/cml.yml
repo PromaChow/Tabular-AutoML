@@ -5,7 +5,7 @@ on:
       - main
 
 jobs:
-  first-job:
+  run:
     runs-on: ubuntu-latest
     steps:
       - name: Start Energy Measurement
@@ -13,15 +13,29 @@ jobs:
         with:
           json-output: true
           task: start-measurement
-      - name: Checkout code
-        uses: actions/checkout@main
-      - name: Run Action
-        uses: TesseractCoding/Issue_Watcher@main
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
-          author: ${{github.actor}}
-          maxIssue: 2
-          repo: sagnik1511/Tabular-AutoML
-          token: ${{ secrets.GITHUB_TOKEN }}
+          node-version: '16'
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - uses: iterative/setup-cml@v1
+      - name: Run test
+        run: '# Your ML workflow goes here
+
+          pip install -r requirements.txt
+
+          python test.py
+
+          '
+      - id: measurement-6
+        name: Record Measurement After Run test
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          json-output: true
+          label: Run test
+          task: get-measurement
       - id: display-measurement
         name: Display Energy Results
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
